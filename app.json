@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "friscon-app",
+    "name": "friscon",
     "slug": "friscon-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,6 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -18,13 +21,18 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.humamchoudhary.friscon-app",
+      "versionCode": 1,
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
+    
+    
   }
 }
