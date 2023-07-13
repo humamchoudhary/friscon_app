@@ -6,10 +6,7 @@ import CustomText from "../components/CustomText";
 import CustomIconInput from "../components/CustomIconInput";
 import { Feather } from "@expo/vector-icons";
 import { CheckBox } from "@aziz_kizgin/react-native-checkbox";
-import {
-  signInWithEmailAndPassword,
-  signInWithCredential,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../components/firebaseConfig";
 import * as SecureStore from "expo-secure-store";
 
@@ -37,7 +34,7 @@ const LoginScreen = ({ navigation }) => {
           if (isChecked) {
             await SecureStore.setItemAsync("autolog", "true");
           }
-          navigation.navigate("First");
+          navigation.navigate("home");
         })
         .catch((e) => {
           console.log(e);
@@ -131,6 +128,7 @@ const LoginScreen = ({ navigation }) => {
               customColor="#00AEFF"
               size={16}
               iconColor="#ffffff"
+              // colorScheme={CTA_COLOR}
             />
           </View>
           <CustomText

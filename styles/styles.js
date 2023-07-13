@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Dimensions } from "react-native";
 import Constants from "expo-constants";
 export const BG_COLOR = "#FFFFFF";
 export const CTA_COLOR = "#00AEFF";
@@ -11,6 +12,26 @@ export const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     backgroundColor: BG_COLOR,
     padding: 8,
+  },
+  carouselItem: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: CTA_COLOR,
+    width: Dimensions.get("window").width - 60,
+    height: 120,
+    borderRadius: 9,
+    marginRight: 20,
+    overflow: "hidden",
+  },
+  appBar: {
+    marginTop: 13,
+    width: Dimensions.get("window").width,
+    justifyContent: "space-between",
+    alignSelf: "stretch",
+    backgroundColor: "#FFF",
+    zIndex: 3,
+    flexDirection: "row",
   },
   button: {
     height: 50,
@@ -75,5 +96,15 @@ export const styles = StyleSheet.create({
     textDecorationColor: CTA_COLOR,
     color: CTA_COLOR,
     textDecorationStyle: "solid",
+  },
+  shadow: {
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.21,
+    shadowRadius: 6.65,
+    elevation: 9,
   },
 });

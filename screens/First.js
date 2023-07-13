@@ -1,6 +1,6 @@
-import { View, TouchableOpacity, ActivityIndicator, Text } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Image } from "react-native";
-import { BG_COLOR, CTA_COLOR, styles } from "../styles/styles";
+import { BG_COLOR, styles } from "../styles/styles";
 import CustomText from "../components/CustomText";
 
 export default function FirstScreen({ navigation }) {
