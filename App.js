@@ -14,6 +14,8 @@ import { ActivityIndicator, Image, View } from "react-native";
 import { CTA_COLOR, styles, BG_COLOR, DARK_COLOR } from "./styles/styles";
 import OffersScreen from "./screens/Offers";
 import ProductScreen from "./screens/ProductScreen";
+import ProductReviewModal from "./screens/ProductReviewModal";
+import { StatusBar } from "expo-status-bar";
 
 const Tab = createBottomTabNavigator();
 function TabNavigator() {
@@ -87,36 +89,27 @@ export default function App() {
     getUser();
   }, []);
 
-  if (autoLog || autoLog === false) {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName={autoLog ? "home" : "First"}
-          // initialRouteName={"Product"}
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="First" component={FirstScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="home" component={TabNavigator} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
-          <Stack.Screen name="Product" component={ProductScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  } else {
-    return (
-      <View
-        style={[
-          styles.container,
-          {
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        ]}
+  return (
+    <NavigationContainer>
+      {/* <StatusBar style="light" /> */}
+      <Stack.Navigator
+        // initialRouteName={autoLog ? "home" : "First"}
+        initialRouteName={"Product"}
+        screenOptions={{ headerShown: false }}
       >
-        <ActivityIndicator size={40} color={CTA_COLOR} visible={true} />
-      </View>
-    );
-  }
+        <Stack.Screen name="First" component={FirstScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="home" component={TabNavigator} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="Product" component={ProductScreen} />
+        <Stack.Screen
+          name="prodreviewmodal"
+          options={{
+            presentation: "modal",
+          }}
+          component={ProductReviewModal}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }

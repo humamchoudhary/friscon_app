@@ -227,7 +227,12 @@ export default function HomeScreen({ navigation }) {
           {deals && (
             <View style={{}}>
               <CustomText
-                style={{ marginLeft: 30, fontFamily: "Medium", fontSize: 20 }}
+                style={{
+                  marginLeft: 30,
+                  fontFamily: "Medium",
+                  fontSize: 20,
+                  marginTop: 20,
+                }}
               >
                 Exclusive deals
               </CustomText>

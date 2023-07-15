@@ -17,23 +17,24 @@ import { db, storage } from "../components/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import IndexIndicator from "../components/IndexIndicator";
+import ProdReviewTile from "../components/ProdReviewTile";
 
 const ProductScreen = ({ route, navigation }) => {
-  const { itemid } = route.params;
-  console.log(itemid);
+  // const { itemid } = route.params;
+  // console.log(itemid);
   const [product, setProduct] = useState();
   const [currentItem, setCurrentItem] = useState();
   const [activeView, setActiveView] = useState("product");
   const [activeColor, setActiveColor] = useState(0);
   const [activeVarient, setActiveVarient] = useState(0);
   useEffect(() => {
-    getDoc(doc(db, "products", itemid)).then(async (_) => {
+    getDoc(doc(db, "products", "item1")).then(async (_) => {
       var data = _.data();
       for (let index = 0; index < data.imgs.length; index++) {
         data.imgs[index] = await getDownloadURL(ref(storage, data.imgs[index]));
       }
       setProduct(data);
-      console.log(product);
+      // console.log(product);
     });
   }, []);
 
@@ -79,7 +80,7 @@ const ProductScreen = ({ route, navigation }) => {
               <FlatList
                 data={product.imgs}
                 renderItem={({ item, index }) => {
-                  console.log(item);
+                  // console.log(item);
                   return (
                     <View
                       style={{ height: Dimensions.get("window").width - 40 }}
@@ -97,7 +98,7 @@ const ProductScreen = ({ route, navigation }) => {
                 snapToAlignment="start"
                 bounces={false}
                 showsHorizontalScrollIndicator={false}
-                onViewableItemsChanged={onViewableItemsChanged}
+                // onViewableItemsChanged={onViewableItemsChanged}
               />
               <IndexIndicator currentIndex={currentItem} data={product.imgs} />
             </View>
@@ -249,7 +250,7 @@ const ProductScreen = ({ route, navigation }) => {
                   </CustomText>
                   <View style={{ flexDirection: "row", marginTop: 10 }}>
                     {product.colors.map((item, index) => {
-                      console.log(item);
+                      // console.log(item);
                       return (
                         <TouchableOpacity
                           key={index}
@@ -283,7 +284,7 @@ const ProductScreen = ({ route, navigation }) => {
                   </CustomText>
                   <View style={{ flexDirection: "row", marginTop: 10 }}>
                     {product.varients.map((item, index) => {
-                      console.log(item);
+                      // console.log(item);
                       return (
                         <TouchableOpacity
                           key={index}
@@ -320,9 +321,140 @@ const ProductScreen = ({ route, navigation }) => {
                 </View>
               </View>
             ) : activeView === "details" ? (
-              <View></View>
+              <View style={{ marginBottom: 80 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flex: 0.5 }}>
+                    <CustomText
+                      style={{
+                        fontSize: 16,
+                        fontFamily: "Bold",
+                        color: DARK_COLOR,
+                      }}
+                    >
+                      Product Details
+                    </CustomText>
+                    <CustomText
+                      style={{
+                        fontSize: 16,
+                        fontFamily: "Light",
+                        color: DARK_COLOR,
+                      }}
+                    >
+                      {product.details}
+                    </CustomText>
+                  </View>
+                  <View style={{ flex: 0.5 }}>
+                    <CustomText
+                      style={{
+                        fontSize: 16,
+                        fontFamily: "Bold",
+                        color: DARK_COLOR,
+                      }}
+                    >
+                      SKU
+                    </CustomText>
+                    <CustomText
+                      style={{
+                        fontSize: 16,
+                        fontFamily: "Light",
+                        color: DARK_COLOR,
+                      }}
+                    >
+                      {product.code}
+                    </CustomText>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 15,
+                  }}
+                >
+                  <View style={{ flex: 0.5 }}>
+                    <CustomText
+                      style={{
+                        fontSize: 16,
+                        fontFamily: "Bold",
+                        color: DARK_COLOR,
+                      }}
+                    >
+                      Category
+                    </CustomText>
+                    <CustomText
+                      style={{
+                        fontSize: 16,
+                        fontFamily: "Light",
+                        color: DARK_COLOR,
+                      }}
+                    >
+                      {product.category}
+                    </CustomText>
+                  </View>
+                  {product.material && (
+                    <View style={{ flex: 0.5 }}>
+                      <CustomText
+                        style={{
+                          fontSize: 16,
+                          fontFamily: "Bold",
+                          color: DARK_COLOR,
+                        }}
+                      >
+                        Material
+                      </CustomText>
+                      <CustomText
+                        style={{
+                          fontSize: 16,
+                          fontFamily: "Light",
+                          color: DARK_COLOR,
+                        }}
+                      >
+                        {product.material}
+                      </CustomText>
+                    </View>
+                  )}
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 15,
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    <CustomText
+                      style={{
+                        fontSize: 16,
+                        fontFamily: "Bold",
+                        color: DARK_COLOR,
+                      }}
+                    >
+                      Description
+                    </CustomText>
+                    <CustomText
+                      style={{
+                        fontSize: 16,
+                        fontFamily: "Light",
+                        color: DARK_COLOR,
+                      }}
+                    >
+                      {product.description}
+                    </CustomText>
+                  </View>
+                </View>
+              </View>
             ) : activeView === "review" ? (
-              <View></View>
+              <View>
+                {product.reviews.map((item, index) => {
+                  console.log(item.time);
+                  return <ProdReviewTile item={item} />;
+                })}
+              </View>
             ) : null}
           </ScrollView>
           <View
