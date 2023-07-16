@@ -18,6 +18,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import IndexIndicator from "../components/IndexIndicator";
 import ProdReviewTile from "../components/ProdReviewTile";
+import ProductReviewModal from "../screens/ProductReviewModal";
 
 const ProductScreen = ({ route, navigation }) => {
   // const { itemid } = route.params;
@@ -27,6 +28,8 @@ const ProductScreen = ({ route, navigation }) => {
   const [activeView, setActiveView] = useState("product");
   const [activeColor, setActiveColor] = useState(0);
   const [activeVarient, setActiveVarient] = useState(0);
+  const [modalShown, setModalShown] = useState(false);
+
   useEffect(() => {
     getDoc(doc(db, "products", "item1")).then(async (_) => {
       var data = _.data();
@@ -452,7 +455,9 @@ const ProductScreen = ({ route, navigation }) => {
               <View>
                 {product.reviews.map((item, index) => {
                   console.log(item.time);
-                  return <ProdReviewTile item={item} />;
+                  return (
+                    <ProdReviewTile item={item} setModalShown={setModalShown} />
+                  );
                 })}
               </View>
             ) : null}
@@ -497,6 +502,7 @@ const ProductScreen = ({ route, navigation }) => {
           <ActivityIndicator size={40} color={CTA_COLOR} visible={true} />
         </View>
       )}
+      {modalShown && <ProductReviewModal setModalShown={setModalShown} />}
     </SafeAreaView>
   );
 };
