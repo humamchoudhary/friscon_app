@@ -6,11 +6,10 @@ import CustomText from "../components/CustomText";
 import { DARK_COLOR } from "../styles/styles";
 import RatingStars from "./RatingStars";
 
-const ProdReviewTile = ({ item, setModalShown }) => {
+const ProdReviewTile = ({ item }) => {
   const [time, setTime] = useState();
   const [name, setName] = useState();
   useEffect(() => {
-    console.log(item.time);
     const milliseconds =
       item.time.seconds * 1000 + item.time.nanoseconds / 1000000;
     const date = new Date(milliseconds);
@@ -22,72 +21,68 @@ const ProdReviewTile = ({ item, setModalShown }) => {
 
   return (
     <>
-      <TouchableOpacity
-        onPress={() => {
-          // navigation.navigate("prodreviewmodal");
-          setModalShown(true);
-        }}
-        style={{ flexDirection: "row" }}
-      >
-        <View
-          style={{
-            flex: 0.7,
-            flexDirection: "column",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-          }}
-        >
-          <CustomText
+      {name && time && (
+        <View style={{ flexDirection: "row" }}>
+          <View
             style={{
-              fontSize: 16,
-              fontFamily: "Medium",
-              color: DARK_COLOR,
+              flex: 0.7,
+              flexDirection: "column",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
             }}
           >
-            {name}
-          </CustomText>
-          <CustomText
-            style={{
-              fontSize: 16,
-              fontFamily: "Light",
-              color: DARK_COLOR,
-            }}
-          >
-            {item.text}
-          </CustomText>
-        </View>
-        <View
-          style={{
-            flex: 0.3,
-            flexDirection: "column",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-          }}
-        >
-          <CustomText
-            style={{
-              fontSize: 12,
-              fontFamily: "Medium",
-              color: "#A3A3A3",
-            }}
-          >
-            {time}
-          </CustomText>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <RatingStars rating={item.rating} />
+            <CustomText
+              style={{
+                fontSize: 16,
+                fontFamily: "Medium",
+                color: DARK_COLOR,
+              }}
+            >
+              {name}
+            </CustomText>
             <CustomText
               style={{
                 fontSize: 16,
                 fontFamily: "Light",
                 color: DARK_COLOR,
-                marginLeft: 7,
               }}
             >
-              {item.rating}
+              {item.text}
             </CustomText>
           </View>
+          <View
+            style={{
+              flex: 0.3,
+              flexDirection: "column",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+            }}
+          >
+            <CustomText
+              style={{
+                fontSize: 12,
+                fontFamily: "Medium",
+                color: "#A3A3A3",
+              }}
+            >
+              {time}
+            </CustomText>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <RatingStars rating={item.rating} />
+              <CustomText
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Light",
+                  color: DARK_COLOR,
+                  marginLeft: 7,
+                }}
+              >
+                {item.rating}
+              </CustomText>
+            </View>
+          </View>
         </View>
-      </TouchableOpacity>
+      )}
     </>
   );
 };

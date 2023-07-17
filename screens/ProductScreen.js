@@ -454,39 +454,70 @@ const ProductScreen = ({ route, navigation }) => {
             ) : activeView === "review" ? (
               <View>
                 {product.reviews.map((item, index) => {
-                  console.log(item.time);
                   return (
-                    <ProdReviewTile item={item} setModalShown={setModalShown} />
+                    <ProdReviewTile
+                      key={index}
+                      item={item}
+                      setModalShown={setModalShown}
+                    />
                   );
                 })}
               </View>
             ) : null}
           </ScrollView>
-          <View
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: BG_COLOR,
-              justifyContent: "space-evenly",
-              alignItems: "center",
-              flexDirection: "row",
-              zIndex: 10,
-              paddingBottom: 10,
-            }}
-          >
-            <View style={[styles.buttonHollow, styles.button, { flex: 0.4 }]}>
-              <CustomText style={[styles.buttonHollowText]}>
-                Add To Cart
-              </CustomText>
+          {activeView === "review" ? (
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: BG_COLOR,
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexDirection: "row",
+                zIndex: 10,
+                paddingBottom: 10,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  setModalShown(true);
+                }}
+                style={[styles.buttonFilled, styles.button, { flex: 0.9 }]}
+              >
+                <CustomText style={[styles.buttonFilledText]}>
+                  Write Review
+                </CustomText>
+              </TouchableOpacity>
             </View>
-            <View style={[styles.buttonFilled, styles.button, { flex: 0.4 }]}>
-              <CustomText style={[styles.buttonFilledText]}>
-                Add To Cart
-              </CustomText>
+          ) : (
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: BG_COLOR,
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexDirection: "row",
+                zIndex: 10,
+                paddingBottom: 10,
+              }}
+            >
+              <View style={[styles.buttonHollow, styles.button, { flex: 0.4 }]}>
+                <CustomText style={[styles.buttonHollowText]}>
+                  Add To Cart
+                </CustomText>
+              </View>
+              <View style={[styles.buttonFilled, styles.button, { flex: 0.4 }]}>
+                <CustomText style={[styles.buttonFilledText]}>
+                  Add To Cart
+                </CustomText>
+              </View>
             </View>
-          </View>
+          )}
         </View>
       ) : (
         <View

@@ -12,26 +12,33 @@ const RatingStars = ({ rating }) => {
       } else {
         stars[index] = 0.5;
       }
+      setStars(stars);
     }
     console.log(stars);
   }, [rating]);
 
   return (
     <View style={{ flexDirection: "row" }}>
-      {stars.map((item, index) => {
-        return item === 1 ? (
-          <FontAwesome name="star" size={14} key={index} color={CTA_COLOR} />
-        ) : item === 0.5 ? (
-          <FontAwesome
-            name="star-half-full"
-            key={index}
-            size={14}
-            color={CTA_COLOR}
-          />
-        ) : (
-          <FontAwesome name="star-o" size={14} key={index} color={CTA_COLOR} />
-        );
-      })}
+      {rating &&
+        stars.map((item, index) => {
+          return item === 1 ? (
+            <FontAwesome name="star" size={14} key={index} color={CTA_COLOR} />
+          ) : item === 0.5 ? (
+            <FontAwesome
+              name="star-half-full"
+              key={index}
+              size={14}
+              color={CTA_COLOR}
+            />
+          ) : (
+            <FontAwesome
+              name="star-o"
+              size={14}
+              key={index}
+              color={CTA_COLOR}
+            />
+          );
+        })}
     </View>
   );
 };
