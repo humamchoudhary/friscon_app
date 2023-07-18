@@ -93,8 +93,8 @@ export default function App() {
     <NavigationContainer>
       {/* <StatusBar style="light" /> */}
       <Stack.Navigator
-        // initialRouteName={autoLog ? "home" : "First"}
-        initialRouteName={"Product"}
+        initialRouteName={autoLog ? "home" : "First"}
+        // initialRouteName={"Product"}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="First" component={FirstScreen} />

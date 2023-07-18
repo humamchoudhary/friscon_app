@@ -6,7 +6,11 @@ import CustomText from "../components/CustomText";
 import CustomIconInput from "../components/CustomIconInput";
 import { Feather } from "@expo/vector-icons";
 import { CheckBox } from "@aziz_kizgin/react-native-checkbox";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { auth } from "../components/firebaseConfig";
 import * as SecureStore from "expo-secure-store";
 
@@ -19,7 +23,7 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     async function setInit() {
-      await SecureStore.setItemAsync("autolog", true);
+      await SecureStore.setItemAsync("autolog", "false");
     }
     setInit();
   }, []);

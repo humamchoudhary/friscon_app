@@ -21,7 +21,7 @@ import ProdReviewTile from "../components/ProdReviewTile";
 import ProductReviewModal from "../screens/ProductReviewModal";
 
 const ProductScreen = ({ route, navigation }) => {
-  // const { itemid } = route.params;
+  const { itemid } = route.params;
   // console.log(itemid);
   const [product, setProduct] = useState();
   const [currentItem, setCurrentItem] = useState();
@@ -31,7 +31,7 @@ const ProductScreen = ({ route, navigation }) => {
   const [modalShown, setModalShown] = useState(false);
 
   useEffect(() => {
-    getDoc(doc(db, "products", "item1")).then(async (_) => {
+    getDoc(doc(db, "products", itemid)).then(async (_) => {
       var data = _.data();
       for (let index = 0; index < data.imgs.length; index++) {
         data.imgs[index] = await getDownloadURL(ref(storage, data.imgs[index]));
@@ -533,7 +533,13 @@ const ProductScreen = ({ route, navigation }) => {
           <ActivityIndicator size={40} color={CTA_COLOR} visible={true} />
         </View>
       )}
-      {modalShown && <ProductReviewModal setModalShown={setModalShown} />}
+      {modalShown && (
+        <ProductReviewModal
+          setModalShown={setModalShown}
+          item={"item1"}
+          // item={itemId}
+        />
+      )}
     </SafeAreaView>
   );
 };

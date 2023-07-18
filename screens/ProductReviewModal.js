@@ -5,20 +5,49 @@ import { CTA_COLOR, styles } from "../styles/styles";
 import StarRating from "react-native-star-rating-widget";
 import CustomText from "../components/CustomText";
 import CustomInput from "../components/CustomInput";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { doc, updateDoc, arrayUnion, Timestamp, increment } from "firebase/firestore";
+import { db, auth } from "../components/firebaseConfig";
 
-const ProductReviewModal = ({ setModalShown }) => {
+const ProductReviewModal = ({ setModalShown, item }) => {
   const [rating, setRating] = useState(5);
   const [review, setReview] = useState();
-  function ratingCompleted(rating) {
-    console.log("Rating is: " + rating);
-  }
-  // variables
+  const [error, setError] = useState();
+  const [done, setDone] = useState(false);
+
   const handleSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
     if (index < 0) {
       setModalShown(false);
     }
   }, []);
+  const submitReview = async () => {
+    console.log(review);
+    console.log(rating);
+    if (review && rating) {
+      setError();
+      const washingtonRef = doc(db, "products", item);
+      console.log();
+      await updateDoc(washingtonRef, {
+        rating:increment(rating),
+        reviews: arrayUnion({
+          rating: rating,
+          text: review,
+          time: Timestamp.now(),
+          userId: auth.currentUser.uid,
+        }),
+      })
+        .then((_) => {
+          setDone(true);
+        })
+        .catch((_) => {
+          console.log(_);
+          setError("Error");
+        });
+    } else {
+      setError("Please fill all feilds!");
+    }
+  };
 
   return (
     <View style={[stylesLocal.container]}>
@@ -63,10 +92,25 @@ const ProductReviewModal = ({ setModalShown }) => {
           </CustomText>
           <CustomInput
             placeholder={"Your Review"}
-            onChangeText={setRating}
+            onChangeText={setReview}
             text={review}
-            style={{ flex: 0.3, flexDirection: "row", marginHorizontal: 20 }}
+            error={error}
+            style={{
+              flexDirection: "row",
+              marginHorizontal: 20,
+              height: 180,
+            }}
           />
+          <TouchableOpacity
+            onPress={() => {
+              submitReview();
+            }}
+            style={[styles.button, styles.buttonFilled, { marginBottom: 20 }]}
+          >
+            <CustomText style={[styles.buttonFilledText]}>
+              Submit Review
+            </CustomText>
+          </TouchableOpacity>
         </View>
       </BottomSheet>
     </View>
