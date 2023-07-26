@@ -39,7 +39,7 @@ const ProductScreen = ({ route, navigation }) => {
       setProduct(data);
       // console.log(product);
     });
-  }, []);
+  }, [modalShown]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
     setCurrentItem(viewableItems[0]["key"]);
@@ -132,7 +132,7 @@ const ProductScreen = ({ route, navigation }) => {
                     color: CTA_COLOR,
                   }}
                 >
-                  {product.rating}
+                  {(product.rating / product.reviews.length).toFixed(1)}
                 </CustomText>
               </View>
             </View>
@@ -453,15 +453,17 @@ const ProductScreen = ({ route, navigation }) => {
               </View>
             ) : activeView === "review" ? (
               <View>
-                {product.reviews.map((item, index) => {
-                  return (
-                    <ProdReviewTile
-                      key={index}
-                      item={item}
-                      setModalShown={setModalShown}
-                    />
-                  );
-                })}
+                <ScrollView>
+                  {product.reviews.map((item, index) => {
+                    return (
+                      <ProdReviewTile
+                        key={index}
+                        item={item}
+                        setModalShown={setModalShown}
+                      />
+                    );
+                  })}
+                </ScrollView>
               </View>
             ) : null}
           </ScrollView>
@@ -536,7 +538,7 @@ const ProductScreen = ({ route, navigation }) => {
       {modalShown && (
         <ProductReviewModal
           setModalShown={setModalShown}
-          item={"item1"}
+          item={itemid}
           // item={itemId}
         />
       )}

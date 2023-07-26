@@ -28,6 +28,7 @@ export default function HomeScreen({ navigation }) {
   const [highlights, setHighlights] = useState();
   const [topBrands, setTopBrands] = useState();
   const [deals, setDeals] = useState();
+  const [searchValue, setSearchValue] = useState();
   useEffect(() => {
     getDoc(doc(db, "market", "highlights")).then((_) => {
       setHighlights(_.data());
@@ -39,6 +40,22 @@ export default function HomeScreen({ navigation }) {
       setDeals(brands.data()["id"]);
     });
   }, []);
+
+  const debounce = (callback, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    };
+  };
+  const handleInputFinished = () => {
+    // Perform your desired action here
+    console.log("Input finished:", searchValue);
+    navigation.navigate("search", { query: searchValue });
+  };
+  const handleInputFinishedDebounced = debounce(handleInputFinished, 200);
 
   return (
     <SafeAreaView style={{ backgroundColor: BG_COLOR, minHeight: "100%" }}>
@@ -90,6 +107,9 @@ export default function HomeScreen({ navigation }) {
                     name="bell"
                     size={24}
                     color="white"
+                    onPress={() => {
+                      navigation.navigate("search");
+                    }}
                     style={{
                       position: "absolute",
                       top: 10,
@@ -100,6 +120,8 @@ export default function HomeScreen({ navigation }) {
 
                 <CustomIconInput
                   placeholder={"Search any product or Store"}
+                  value={searchValue}
+                  onChangeText={setSearchValue}
                   icon={<Feather name="search" size={20} color={CTA_COLOR} />}
                   style={{
                     backgroundColor: "white",
@@ -114,6 +136,7 @@ export default function HomeScreen({ navigation }) {
                     shadowRadius: 5.62,
                     elevation: 7,
                   }}
+                  onBlur={() => handleInputFinishedDebounced()}
                 />
               </View>
             </ImageBackground>
@@ -217,7 +240,13 @@ export default function HomeScreen({ navigation }) {
               >
                 <View style={{ flexDirection: "row", paddingLeft: 30 }}>
                   {topBrands.map((item, index) => {
-                    return <TopBrandsButton id={item} onPress={() => {}} />;
+                    return (
+                      <TopBrandsButton
+                        key={index}
+                        id={item}
+                        onPress={() => {}}
+                      />
+                    );
                   })}
                 </View>
               </ScrollView>

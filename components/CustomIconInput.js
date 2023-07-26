@@ -9,6 +9,7 @@ const CustomIconInput = ({
   placeholder,
   icon,
   ispassword = false,
+  onBlur = () => {},
 }) => {
   return (
     <View style={[styles.CompleteInput, style]}>
@@ -19,6 +20,7 @@ const CustomIconInput = ({
         placeholder={placeholder}
         value={text}
         secureTextEntry={ispassword}
+        onBlur={onBlur}
       />
     </View>
   );

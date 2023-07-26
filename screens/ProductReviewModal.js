@@ -6,7 +6,13 @@ import StarRating from "react-native-star-rating-widget";
 import CustomText from "../components/CustomText";
 import CustomInput from "../components/CustomInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { doc, updateDoc, arrayUnion, Timestamp, increment } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  Timestamp,
+  increment,
+} from "firebase/firestore";
 import { db, auth } from "../components/firebaseConfig";
 
 const ProductReviewModal = ({ setModalShown, item }) => {
@@ -26,10 +32,9 @@ const ProductReviewModal = ({ setModalShown, item }) => {
     console.log(rating);
     if (review && rating) {
       setError();
-      const washingtonRef = doc(db, "products", item);
-      console.log();
-      await updateDoc(washingtonRef, {
-        rating:increment(rating),
+      console.log(item);
+      await updateDoc(doc(db, "products", item), {
+        rating: increment(rating),
         reviews: arrayUnion({
           rating: rating,
           text: review,

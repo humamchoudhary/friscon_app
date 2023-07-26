@@ -17,7 +17,13 @@ import { doc, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import TopBrandsButton from "../components/TopBrandsButton";
 
+import { useAuthContext } from "../context/AuthContext";
 const OffersScreen = () => {
+  const { user } = useAuthContext();
+  useEffect(() => {
+    console.log(user);
+  }, []);
+
   const [topBrands, setTopBrands] = useState();
   const [offersData, setOffersData] = useState();
   useEffect(() => {

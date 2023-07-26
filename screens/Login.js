@@ -6,13 +6,8 @@ import CustomText from "../components/CustomText";
 import CustomIconInput from "../components/CustomIconInput";
 import { Feather } from "@expo/vector-icons";
 import { CheckBox } from "@aziz_kizgin/react-native-checkbox";
-import {
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserLocalPersistence,
-} from "firebase/auth";
-import { auth } from "../components/firebaseConfig";
 import * as SecureStore from "expo-secure-store";
+import signIn from "../firebase/auth/signin";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -33,22 +28,18 @@ const LoginScreen = ({ navigation }) => {
     setError();
     setEmail(email.replace(" ", ""));
     if (email && password) {
-      await signInWithEmailAndPassword(auth, email, password)
-        .then(async (userCredential) => {
-          if (isChecked) {
-            await SecureStore.setItemAsync("autolog", "true");
-          }
-          navigation.navigate("home");
-        })
-        .catch((e) => {
-          console.log(e);
-          if (e.code === "auth/invalid-email") {
-            setError("Account does not exists");
-          } else {
-            setError("Network Error occured try again later");
-            console.log("Signup failed", e.code);
-          }
-        });
+      const { error } = await signIn(email, password);
+
+      if (error) {
+        setError(error.message);
+      } else {
+        if (isChecked) {
+          SecureStore.setItemAsync("autolog", "true");
+        } else {
+          SecureStore.setItemAsync("autolog", "false");
+        }
+        navigation.navigate("home");
+      }
     } else {
       setError("Please fill all feilds");
     }

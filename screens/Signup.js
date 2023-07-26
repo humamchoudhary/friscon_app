@@ -5,9 +5,7 @@ import { styles, CTA_COLOR, BG_COLOR } from "../styles/styles";
 import CustomText from "../components/CustomText";
 import CustomIconInput from "../components/CustomIconInput";
 import { Feather } from "@expo/vector-icons";
-import { db, auth } from "../components/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import signUp from "../firebase/auth/signup";
 
 const SignupScreen = ({ navigation }) => {
   // Local variables
@@ -19,36 +17,19 @@ const SignupScreen = ({ navigation }) => {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
 
-  // Functions
-  //Signup Logic
   async function SignupWithEmail() {
     setLoading(true);
     setError();
     console.log(loading);
     if (username && password && email && confpassword) {
       if (password === confpassword) {
-        await createUserWithEmailAndPassword(auth, email, password)
-          .then(async (userCredential) => {
-            const { uid } = userCredential.user;
-            if (uid) {
-              // Add additional user info to Firestore
-              await setDoc(doc(db, "users", uid), {
-                username: username,
-                email: email,
-              });
+        const { error } = await signUp(email, password, username);
 
-              // Navigate to the login page
-              navigation.navigate("Login");
-            }
-          })
-          .catch((e) => {
-            if (e.code === "auth/email-already-in-use") {
-              setError("Email already exists");
-            } else {
-              setError("Network Error occured try again later");
-              console.log("Signup failed", e.code);
-            }
-          });
+        if (error) {
+          setError(error.message);
+        } else {
+          navigation.navigate("Login");
+        }
       } else {
         setError("Password and Confirm password should be same");
       }
