@@ -157,7 +157,13 @@ const LoginScreen = ({ navigation }) => {
             display: "flex",
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={async () => {
+              navigation.navigate("forgotpass");
+              
+              
+            }}
+          >
             <CustomText
               style={[
                 styles.underLinedPrimText,

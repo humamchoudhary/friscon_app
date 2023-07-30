@@ -12,7 +12,7 @@ import { Feather } from "@expo/vector-icons";
 import CustomText from "../components/CustomText";
 import CustomIconInput from "../components/CustomIconInput";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { and, collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../components/firebaseConfig";
 import ProductThumbnail from "../components/ProductThumbnail";
 import FilterModal from "../components/filterModal";
@@ -25,10 +25,10 @@ const SearchScreen = ({ route, navigation }) => {
   const [loading, setloading] = useState();
   const [cat, setCat] = useState();
   const [searchQuery, setSeachQuery] = useState();
-  const [filters, setFilters] = useState();
+  const [filters, setFilters] = useState({});
   const [filterModal, setFilterModal] = useState(false);
   const [isEmpty, setEmpty] = useState(false);
-
+  const [productsCopy, setProductsCopy] = useState();
   async function getProductData() {
     const querySnapshot = await getDocs(collection(db, "products"));
     var data = [];
@@ -45,22 +45,51 @@ const SearchScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     setSeachQuery(query);
-    console.log("..");
   }, [query]);
+
+  //Filter
+  useEffect(() => {
+    setProducts(productsCopy);
+    if (!filterModal && filters && products) {
+      const filteredData = products.filter((item) => {
+        let matches = true;
+
+        if (filters.category) {
+          matches = item.data.category === filters.category;
+        } else {
+          matches = true;
+        }
+
+        if (filters.brand) {
+          matches = matches && item.data.brand === filters.brand;
+        } else {
+          matches = matches;
+        }
+
+        if (filters.color) {
+          matches = matches && item.data.colors.includes(filters.color);
+        } else {
+          matches = matches;
+        }
+
+        return matches;
+      });
+
+      setProducts(filteredData);
+    }
+  }, [filterModal, filters]);
 
   async function searchData() {
     setloading(true);
     setProducts();
-    const data = cat
-      .filter((item) =>
-        item.data.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-      .map((item) => item.id);
+    const data = cat.filter((item) =>
+      item.data.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     setProducts(data);
+    setProductsCopy(data);
     setloading(false);
-    console.log(data);
     if (data.length === 0) {
-      console.log("empty");
       setEmpty(true);
     }
   }
@@ -68,7 +97,6 @@ const SearchScreen = ({ route, navigation }) => {
   useEffect(() => {
     if (searchQuery && cat && view === "product") {
       searchData();
-      console.log("test");
     }
   }, [searchQuery, cat]);
 
@@ -78,6 +106,8 @@ const SearchScreen = ({ route, navigation }) => {
         <SafeAreaView style={{ backgroundColor: BG_COLOR, flex: 1 }}>
           {filterModal && (
             <FilterModal
+              data={products}
+              filterData={filters}
               setModalShown={setFilterModal}
               setFilters={setFilters}
             />
@@ -184,7 +214,7 @@ const SearchScreen = ({ route, navigation }) => {
                 const prod = (
                   <ProductThumbnail
                     key={item}
-                    itemid={item}
+                    itemid={item.id}
                     navigation={navigation}
                   />
                 );

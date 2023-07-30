@@ -7,7 +7,7 @@ import { useAuthContext } from '../context/AuthContext';
 import * as SecureStore from "expo-secure-store";
 
 
- const SplashScreen = ({navigation}) => {
+ const SplashScreen = ({navigation }) => {
   const localImage = require("../assets/logo_named.png");
 
   const { user } = useAuthContext();
@@ -19,12 +19,16 @@ import * as SecureStore from "expo-secure-store";
       if (result === "true") {
         if (user) {
           navigation.navigate("home")
+          console.log("asd")
         } else {
             navigation.navigate("First")
-          
+          console.log("d")
         }
  
-      }
+      }else {
+        navigation.navigate("First")
+      console.log("d")
+    }
     }
     getUser();
   }, [user]);
