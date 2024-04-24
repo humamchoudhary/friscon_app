@@ -3,15 +3,15 @@ import { getFirestore, doc, updateDoc } from "firebase/firestore";
 
 const db = getFirestore(firebase_app);
 
-export default async function udateData(colllection, id, data) {
-  let result = null;
+export default async function updateData(colllection, id, data) {
+  
   let error = null;
 
   try {
-    result = await updateDoc(doc(db, colllection, id), data);
+     await updateDoc(doc(db, colllection, id), data);
   } catch (e) {
     error = e.message;
   }
 
-  return { result, error };
+  return {  error };
 }

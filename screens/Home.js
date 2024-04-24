@@ -177,81 +177,48 @@ export default function HomeScreen({ navigation }) {
                 <CategoriesButton
                   name="Men"
                   icon={men}
-                  active={active_cat}
-                  setActive={setActiveCat}
+                  navigation={navigation}
                   text={"Men"}
+                />
+                <CategoriesButton
+                  name="items"
+                  icon={men}
+                  navigation={navigation}
+                  text={"Item"}
                 />
                 <CategoriesButton
                   name="Women"
                   icon={women}
-                  active={active_cat}
-                  setActive={setActiveCat}
+                  navigation={navigation}
                   text={"Women"}
                 />
                 <CategoriesButton
                   name="Baby"
                   icon={baby}
-                  active={active_cat}
-                  setActive={setActiveCat}
+                  navigation={navigation}
                   text={"Baby"}
                 />
                 <CategoriesButton
                   name="Apparel"
                   icon={cloth}
-                  active={active_cat}
-                  setActive={setActiveCat}
+                  navigation={navigation}
                   text={"Apparel"}
                 />
                 <CategoriesButton
                   name="Sports"
                   icon={sports}
-                  active={active_cat}
-                  setActive={setActiveCat}
+                  navigation={navigation}
                   text={"Sports"}
                 />
                 <CategoriesButton
                   name="Electronics"
                   icon={elec}
-                  active={active_cat}
-                  setActive={setActiveCat}
+                  navigation={navigation}
                   text={"Electronics"}
                 />
               </View>
             </ScrollView>
           </View>
-          {topBrands && (
-            <View>
-              <CustomText
-                style={{
-                  fontFamily: "Medium",
-                  fontSize: 20,
-                  marginBottom: 10,
-                  marginLeft: 30,
-                }}
-              >
-                Top Brands
-              </CustomText>
-              <ScrollView
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                horizontal
-                style={{ marginRight: 0 }}
-                contentInset={{ top: 0, left: 30, bottom: 0, right: 0 }}
-              >
-                <View style={{ flexDirection: "row", paddingLeft: 30 }}>
-                  {topBrands.map((item, index) => {
-                    return (
-                      <TopBrandsButton
-                        key={index}
-                        id={item}
-                        onPress={() => {}}
-                      />
-                    );
-                  })}
-                </View>
-              </ScrollView>
-            </View>
-          )}
 
           {deals && (
             <View style={{}}>

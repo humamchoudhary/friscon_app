@@ -3,10 +3,7 @@ import React from "react";
 import { BG_COLOR, CTA_COLOR, styles } from "../styles/styles";
 import CustomText from "./CustomText";
 
-const CategoriesButton = ({ icon, active, text, name, setActive }) => {
-  function ActiveSelf() {
-    setActive(name);
-  }
+const CategoriesButton = ({ icon, text, name, navigation }) => {
   return (
     <View
       style={{
@@ -18,18 +15,11 @@ const CategoriesButton = ({ icon, active, text, name, setActive }) => {
     >
       <TouchableOpacity
         onPress={() => {
-          ActiveSelf();
+          navigation.navigate("search", { category: name });
         }}
-        style={[
-          active === name ? styles.buttonFilled : styles.buttonHollow,
-          styles.Catbutton,
-          { marginBottom: 5 },
-        ]}
+        style={[styles.buttonHollow, styles.Catbutton, { marginBottom: 5 }]}
       >
-        <Image
-          source={icon}
-          style={{ tintColor: active === name ? BG_COLOR : CTA_COLOR }}
-        />
+        <Image source={icon} style={{ tintColor: CTA_COLOR }} />
       </TouchableOpacity>
       <CustomText style={{ fontFamily: "Medium", fontSize: 14 }}>
         {text}

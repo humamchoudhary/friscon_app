@@ -1,8 +1,10 @@
 {
   "expo": {
-    "name": "friscon",
+    "name": "Friscon App",
     "slug": "friscon-app",
     "version": "1.0.0",
+    "privacy":"public",
+    "description":"Friscon Mobile app",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,10 +20,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "enableLottie": true
     },
     "android": {
       "package": "com.humamchoudhary.friscon-app",
+      "enableLottie": true,
       "versionCode": 1,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
@@ -31,8 +35,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
-    
+    },
+    "plugins": [
+      [
+        "@stripe/stripe-react-native",
+        {
+         
+          "enableGooglePay": true
+        }
+      ]
+    ]
     
   }
 }

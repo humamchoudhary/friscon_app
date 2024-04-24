@@ -14,22 +14,27 @@ import { styles, CTA_COLOR, BG_COLOR, DARK_COLOR } from "../styles/styles";
 import { Feather } from "@expo/vector-icons";
 import CustomText from "../components/CustomText";
 import { db, storage } from "../components/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import IndexIndicator from "../components/IndexIndicator";
 import ProdReviewTile from "../components/ProdReviewTile";
 import ProductReviewModal from "../screens/ProductReviewModal";
+import updateData from "../firebase/firestore/updateData";
+import { useAuthContext } from "../context/AuthContext";
+import Toast from "react-native-root-toast";
 
 const ProductScreen = ({ route, navigation }) => {
   const { itemid } = route.params;
-  // console.log(itemid);
   const [product, setProduct] = useState();
   const [currentItem, setCurrentItem] = useState();
   const [activeView, setActiveView] = useState("product");
   const [activeColor, setActiveColor] = useState(0);
+  const [activeColorName, setActiveColorName] = useState();
   const [activeVarient, setActiveVarient] = useState(0);
+  const [activeVarientName, setActiveVarientName] = useState();
   const [modalShown, setModalShown] = useState(false);
-
+  const [loadingAddToCart, setLoadingAddToCart] = useState(false);
+  const { user } = useAuthContext();
   useEffect(() => {
     getDoc(doc(db, "products", itemid)).then(async (_) => {
       var data = _.data();
@@ -37,13 +42,47 @@ const ProductScreen = ({ route, navigation }) => {
         data.imgs[index] = await getDownloadURL(ref(storage, data.imgs[index]));
       }
       setProduct(data);
-      // console.log(product);
+      setActiveVarientName(data.varients[activeVarient]);
+      setActiveColorName(data.colors[activeColor]);
     });
   }, [modalShown]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
     setCurrentItem(viewableItems[0]["key"]);
   }, []);
+
+  useEffect(() => {
+    if (product) {
+      setActiveVarientName(product.varients[activeVarient]);
+      setActiveColorName(product.colors[activeColor]);
+    }
+  }, [activeColor, activeVarient]);
+
+  async function AddToCart() {
+    setLoadingAddToCart(true);
+
+    const { error } = await updateData("users", user.uid, {
+      cart: arrayUnion({
+        color: activeColorName,
+        varient: activeVarientName,
+        id: itemid,
+        quantity: 1,
+        basePrice: product.price,
+      }),
+    });
+    if (!error) {
+      Toast.show("Item added to cart!", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      });
+    }
+    setLoadingAddToCart(false);
+  }
+
   return (
     <SafeAreaView style={{ backgroundColor: BG_COLOR, flex: 1 }}>
       <View
@@ -70,7 +109,14 @@ const ProductScreen = ({ route, navigation }) => {
             Product
           </CustomText>
         </View>
-        <Feather name="shopping-cart" size={24} color="black" />
+        <Feather
+          name="shopping-cart"
+          size={24}
+          color={CTA_COLOR}
+          onPress={() => {
+            navigation.navigate("Cart");
+          }}
+        />
       </View>
       {product ? (
         <View style={{ flex: 1 }}>
@@ -83,7 +129,6 @@ const ProductScreen = ({ route, navigation }) => {
               <FlatList
                 data={product.imgs}
                 renderItem={({ item, index }) => {
-                  // console.log(item);
                   return (
                     <View
                       style={{ height: Dimensions.get("window").width - 40 }}
@@ -240,7 +285,7 @@ const ProductScreen = ({ route, navigation }) => {
               }}
             />
             {activeView === "product" ? (
-              <View>
+              <View style={{ marginBottom: 80 }}>
                 <View>
                   <CustomText
                     style={{
@@ -253,7 +298,6 @@ const ProductScreen = ({ route, navigation }) => {
                   </CustomText>
                   <View style={{ flexDirection: "row", marginTop: 10 }}>
                     {product.colors.map((item, index) => {
-                      // console.log(item);
                       return (
                         <TouchableOpacity
                           key={index}
@@ -266,7 +310,8 @@ const ProductScreen = ({ route, navigation }) => {
                             height: 40,
                             borderRadius: 20,
                             marginHorizontal: 6,
-                            borderWidth: index === activeColor ? 4 : 0,
+                            borderWidth: index === activeColor ? 4 : 1,
+
                             borderColor:
                               index === activeColor ? CTA_COLOR : DARK_COLOR,
                           }}
@@ -287,7 +332,6 @@ const ProductScreen = ({ route, navigation }) => {
                   </CustomText>
                   <View style={{ flexDirection: "row", marginTop: 10 }}>
                     {product.varients.map((item, index) => {
-                      // console.log(item);
                       return (
                         <TouchableOpacity
                           key={index}
@@ -452,7 +496,7 @@ const ProductScreen = ({ route, navigation }) => {
                 </View>
               </View>
             ) : activeView === "review" ? (
-              <View>
+              <View style={{ marginBottom: 80 }}>
                 <ScrollView>
                   {product.reviews.map((item, index) => {
                     return (
@@ -508,14 +552,30 @@ const ProductScreen = ({ route, navigation }) => {
                 paddingBottom: 10,
               }}
             >
-              <View style={[styles.buttonHollow, styles.button, { flex: 0.4 }]}>
-                <CustomText style={[styles.buttonHollowText]}>
-                  Add To Cart
-                </CustomText>
-              </View>
+              {loadingAddToCart ? (
+                <View
+                  style={[styles.buttonHollow, styles.button, { flex: 0.4 }]}
+                >
+                  <ActivityIndicator
+                    visible={true}
+                    color={CTA_COLOR}
+                    size={20}
+                  />
+                </View>
+              ) : (
+                <TouchableOpacity
+                  onPress={AddToCart}
+                  style={[styles.buttonHollow, styles.button, { flex: 0.4 }]}
+                >
+                  <CustomText style={[styles.buttonHollowText]}>
+                    Add To Cart
+                  </CustomText>
+                </TouchableOpacity>
+              )}
+
               <View style={[styles.buttonFilled, styles.button, { flex: 0.4 }]}>
                 <CustomText style={[styles.buttonFilledText]}>
-                  Add To Cart
+                  Buy Now
                 </CustomText>
               </View>
             </View>

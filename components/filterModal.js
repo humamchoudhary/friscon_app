@@ -3,13 +3,12 @@ import {
   Text,
   View,
   Dimensions,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import BottomSheet from "@gorhom/bottom-sheet";
 import CustomText from "./CustomText";
-import { CTA_COLOR, styles } from "../styles/styles";
+import { CTA_COLOR, DARK_COLOR, styles } from "../styles/styles";
 import CustomIconInput from "./CustomIconInput";
 
 const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
@@ -66,7 +65,7 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
       <BottomSheet
         index={0}
         enablePanDownToClose={true}
-        snapPoints={["62%", "65%"]}
+        snapPoints={["65%"]}
         backgroundStyle={{
           borderWidth: 1,
           borderColor: "gray",
@@ -136,24 +135,56 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
             <CustomText style={{ fontFamily: "Bold", fontSize: 16 }}>
               Category
             </CustomText>
-            <CustomText style={{ fontFamily: "Light", fontSize: 16 }}>
-              {filterData && filterData.category ? filterData.category : "Any"}
+            <CustomText
+              style={{
+                fontFamily: "Light",
+                color:
+                  filterData.category && filterData.category.length > 0
+                    ? CTA_COLOR
+                    : DARK_COLOR,
+                fontSize: 16,
+              }}
+            >
+              {filterData &&
+              filterData.category &&
+              filterData.category.length > 0
+                ? filterData.category.map((item, index) => {
+                    if (index === filterData.category.length - 1)
+                      return `${item}`;
+                    else return `${item} , `;
+                  })
+                : "Any"}
             </CustomText>
             {category && (
-              <View style={{ maxHeight: 50 }}>
-                <ScrollView>
+              <View>
+                <View>
                   {availcategory.map((item, index) => {
                     return item ? (
                       <TouchableOpacity
                         onPress={() => {
-                          filterData.category = item;
+                          if (filterData.category) {
+                            if (filterData.category.includes(item)) {
+                              filterData.category = filterData.category.filter(
+                                (cat) => cat !== item
+                              );
+                            } else {
+                              filterData.category.push(item);
+                            }
+                          } else {
+                            filterData.category = [item];
+                          }
                           setFilters(filterData);
+                          setCategory(false);
                         }}
                         key={index}
                       >
                         <CustomText
                           style={{
-                            color: "#A3A3A3",
+                            color:
+                              filterData.category &&
+                              filterData.category.includes(item)
+                                ? CTA_COLOR
+                                : "#A3A3A3",
                             fontFamily: "Medium",
                             fontSize: 14,
                           }}
@@ -164,8 +195,9 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
                     ) : (
                       <TouchableOpacity
                         onPress={() => {
-                          filterData.category = null;
+                          filterData.category = [];
                           setFilters(filterData);
+                          setCategory(false);
                         }}
                         key={index}
                       >
@@ -181,7 +213,7 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
                       </TouchableOpacity>
                     );
                   })}
-                </ScrollView>
+                </View>
               </View>
             )}
           </TouchableOpacity>
@@ -209,12 +241,18 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
             <CustomText style={{ fontFamily: "Bold", fontSize: 16 }}>
               Brands
             </CustomText>
-            <CustomText style={{ fontFamily: "Light", fontSize: 16 }}>
+            <CustomText
+              style={{
+                fontFamily: "Light",
+                fontSize: 16,
+                color: filterData.brand ? CTA_COLOR : DARK_COLOR,
+              }}
+            >
               {filterData && filterData.brand ? filterData.brand : "Any"}
             </CustomText>
             {brand && (
-              <View style={{ maxHeight: 50 }}>
-                <ScrollView>
+              <View style={{}}>
+                <View>
                   {availbrand.map((item, index) => {
                     return item ? (
                       <TouchableOpacity
@@ -254,7 +292,7 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
                       </TouchableOpacity>
                     );
                   })}
-                </ScrollView>
+                </View>
               </View>
             )}
           </TouchableOpacity>
@@ -298,8 +336,8 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
               )}
             </CustomText>
             {color && (
-              <View style={{ maxHeight: 50 }}>
-                <ScrollView
+              <View style={{}}>
+                <View
                   horizontal
                   contentContainerStyle={{
                     justifyContent: "center",
@@ -346,7 +384,7 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
                       </TouchableOpacity>
                     );
                   })}
-                </ScrollView>
+                </View>
               </View>
             )}
           </TouchableOpacity>
@@ -365,7 +403,7 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
             }}
           />
           {/* Price */}
-          <View
+          {/* <View
             style={{
               flexDirection: "column",
               justifyContent: "space-between",
@@ -389,8 +427,8 @@ const FilterModal = ({ setModalShown, setFilters, data, filterData }) => {
                 icon={<CustomText>To</CustomText>}
               />
             </View>
-          </View>
-          <View style={{ flex: 1 }}>
+          </View> */}
+          <View style={{ flex: 1, position: "absolute", bottom: 30 }}>
             <TouchableOpacity
               onPress={() => {
                 setModalShown(false);

@@ -1,7 +1,7 @@
 import { Text } from "react-native";
 import { useFonts } from "expo-font";
 
-const CustomText = ({ children, style }) => {
+const CustomText = ({ children, style, props }) => {
   let [fontLoaded, error] = useFonts({
     Regular: require("../assets/fonts/Poppins-Regular.ttf"),
     Medium: require("../assets/fonts/Poppins-Medium.ttf"),
@@ -12,7 +12,11 @@ const CustomText = ({ children, style }) => {
   if (!fontLoaded) {
     return null;
   } else {
-    return <Text style={[style]}>{children}</Text>;
+    return (
+      <Text style={[style]} {...props}>
+        {children}
+      </Text>
+    );
   }
 };
 

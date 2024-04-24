@@ -1,34 +1,26 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { styles, CTA_COLOR, BG_COLOR, DARK_COLOR } from "../styles/styles";
+import { styles, CTA_COLOR, BG_COLOR } from "../styles/styles";
 import { Feather } from "@expo/vector-icons";
 import CustomText from "../components/CustomText";
 import CustomIconInput from "../components/CustomIconInput";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../components/firebaseConfig";
 import ProductThumbnail from "../components/ProductThumbnail";
 import FilterModal from "../components/filterModal";
 
 const SearchScreen = ({ route, navigation }) => {
-  const { query } = route.params;
-  const [view, setView] = useState("product");
+  const query = route.params?.query;
+  const category = route.params?.category;
   const [products, setProducts] = useState();
-  const [stores, setStores] = useState();
   const [loading, setloading] = useState();
   const [cat, setCat] = useState();
   const [searchQuery, setSeachQuery] = useState();
   const [filters, setFilters] = useState({});
   const [filterModal, setFilterModal] = useState(false);
   const [isEmpty, setEmpty] = useState(false);
-  const [productsCopy, setProductsCopy] = useState();
+
   async function getProductData() {
     const querySnapshot = await getDocs(collection(db, "products"));
     var data = [];
@@ -45,36 +37,47 @@ const SearchScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     setSeachQuery(query);
-  }, [query]);
+    if (category) {
+      if (filters.category) {
+        filters.category.push(category);
+      } else {
+        filters.category = [category];
+      }
+      console.log(filters);
+    }
+  }, [query, category]);
 
   //Filter
+
+  function applyFilter() {
+    return cat.filter((item) => {
+      let matches = true;
+
+      if (filters.category && filters.category.length) {
+        matches = filters.category.includes(item.data.category);
+        console.log(matches);
+      } else {
+        matches = matches;
+      }
+
+      if (filters.brand) {
+        matches = matches && item.data.brand === filters.brand;
+      } else {
+        matches = matches;
+      }
+
+      if (filters.color) {
+        matches = matches && item.data.colors.includes(filters.color);
+      } else {
+        matches = matches;
+      }
+
+      return matches;
+    });
+  }
   useEffect(() => {
-    setProducts(productsCopy);
     if (!filterModal && filters && products) {
-      const filteredData = products.filter((item) => {
-        let matches = true;
-
-        if (filters.category) {
-          matches = item.data.category === filters.category;
-        } else {
-          matches = true;
-        }
-
-        if (filters.brand) {
-          matches = matches && item.data.brand === filters.brand;
-        } else {
-          matches = matches;
-        }
-
-        if (filters.color) {
-          matches = matches && item.data.colors.includes(filters.color);
-        } else {
-          matches = matches;
-        }
-
-        return matches;
-      });
-
+      const filteredData = applyFilter();
       setProducts(filteredData);
     }
   }, [filterModal, filters]);
@@ -82,12 +85,16 @@ const SearchScreen = ({ route, navigation }) => {
   async function searchData() {
     setloading(true);
     setProducts();
-    const data = cat.filter((item) =>
-      item.data.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    console.log(cat);
+    if (searchQuery != "") {
+      const data = cat.filter((item) =>
+        item.data.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    } else {
+      const data = cat;
+    }
 
     setProducts(data);
-    setProductsCopy(data);
     setloading(false);
     if (data.length === 0) {
       setEmpty(true);
@@ -95,10 +102,19 @@ const SearchScreen = ({ route, navigation }) => {
   }
 
   useEffect(() => {
-    if (searchQuery && cat && view === "product") {
+    console.log("as");
+    if (searchQuery && cat) {
       searchData();
+    } else if (!searchQuery) {
+      setProducts(cat);
     }
   }, [searchQuery, cat]);
+  useEffect(() => {
+    if (cat) {
+      const filteredData = applyFilter();
+      setProducts(filteredData);
+    }
+  }, [cat]);
 
   return (
     <>
@@ -106,7 +122,7 @@ const SearchScreen = ({ route, navigation }) => {
         <SafeAreaView style={{ backgroundColor: BG_COLOR, flex: 1 }}>
           {filterModal && (
             <FilterModal
-              data={products}
+              data={cat}
               filterData={filters}
               setModalShown={setFilterModal}
               setFilters={setFilters}
@@ -160,34 +176,8 @@ const SearchScreen = ({ route, navigation }) => {
               }}
             />
           </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-evenly" }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                setView("product");
-              }}
-            >
-              <CustomText
-                style={{ color: view === "product" ? CTA_COLOR : DARK_COLOR }}
-              >
-                Products
-              </CustomText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setView("store");
-              }}
-            >
-              <CustomText
-                style={{ color: view === "store" ? CTA_COLOR : DARK_COLOR }}
-              >
-                Stores
-              </CustomText>
-            </TouchableOpacity>
-          </View>
 
-          {isEmpty ? (
+          {products && products.length === 0 && !loading ? (
             <View
               style={{
                 flex: 1,
@@ -198,7 +188,7 @@ const SearchScreen = ({ route, navigation }) => {
               <CustomText>No Item Found!</CustomText>
               <CustomText>Try some other keyword</CustomText>
             </View>
-          ) : view === "product" && products ? (
+          ) : products ? (
             <FlatList
               data={products}
               numColumns={2}
@@ -240,8 +230,6 @@ const SearchScreen = ({ route, navigation }) => {
                 );
               }}
             />
-          ) : view === "store" ? (
-            <View></View>
           ) : (
             <View
               style={[

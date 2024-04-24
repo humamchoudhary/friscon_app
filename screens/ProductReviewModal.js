@@ -19,7 +19,6 @@ const ProductReviewModal = ({ setModalShown, item }) => {
   const [rating, setRating] = useState(5);
   const [review, setReview] = useState();
   const [error, setError] = useState();
-  const [done, setDone] = useState(false);
 
   const handleSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
@@ -43,7 +42,7 @@ const ProductReviewModal = ({ setModalShown, item }) => {
         }),
       })
         .then((_) => {
-          setDone(true);
+          setModalShown(false);
         })
         .catch((_) => {
           console.log(_);

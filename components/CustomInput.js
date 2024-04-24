@@ -2,7 +2,14 @@ import { TextInput, StyleSheet, View } from "react-native";
 import React from "react";
 import { CTA_COLOR } from "../styles/styles";
 
-const CustomInput = ({ text, onChangeText, style, placeholder, error }) => {
+const CustomInput = ({
+  text,
+  onChangeText,
+  style,
+  placeholder,
+  error,
+  props,
+}) => {
   return (
     <View style={style}>
       <TextInput
@@ -16,7 +23,7 @@ const CustomInput = ({ text, onChangeText, style, placeholder, error }) => {
         onChangeText={onChangeText}
         placeholder={placeholder}
         value={text}
-        // {...props}
+        {...props}
         multiline
         numberOfLines={14}
       />

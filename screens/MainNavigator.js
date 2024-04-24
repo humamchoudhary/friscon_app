@@ -14,22 +14,26 @@ import ProductScreen from "./ProductScreen";
 import SearchScreen from "./Search";
 import SplashScreen from "./SplashScreen";
 import ForgotPass from "./ForgotPass";
+import CartScreen from "./CartScreen";
+import CheckoutScreen from "./CheckoutScreen";
+import PaymentSuccessScreen from "./PaymentSuccessScreen";
+import ProfileScreen from "./ProfileScreen";
+import LogoutScreen from "./Logout";
+import Privacy from "./Privacy";
+import OrderHistory from "./OrderHistory";
+import OrderHistoryList from "./OrderHistoryList";
+
 const Tab = createBottomTabNavigator();
+
 function TabNavigator() {
   const offerIcon = require("../assets/offerIcon.png");
   return (
     <View style={{ flex: 1, backgroundColor: BG_COLOR }}>
       <Tab.Navigator
         initialRouteName={"Home"} //Prod
-        // initialRouteName={"search"} //Dev
+        // initialRouteName={"Profile"} //Dev
         screenOptions={({ route }) => ({
           headerShown: false,
-          // tabBarButton: ["search"].includes(route.name)
-          //   ? () => {
-          //       return null;
-          //     }
-          //   : undefined,
-
           tabBarItemStyle: { marginTop: 5 },
           tabBarStyle: {
             borderTopRightRadius: 23,
@@ -52,16 +56,31 @@ function TabNavigator() {
             ),
           }}
         />
+
         <Tab.Screen
-          name="offers"
-          component={OffersScreen}
+          name="Search"
+          component={SearchScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <Image
-                source={offerIcon}
-                style={{ width: 24, height: 24, tintColor: color }}
-              />
-              // <Feather name="home" color={color} size={size} />
+              <Feather name="search" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Cart"
+          component={CartScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Feather name="shopping-cart" size={24} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Feather name="user" size={24} color={color} />
             ),
           }}
         />
@@ -77,8 +96,8 @@ const MainNavigator = () => {
       <NavigationContainer>
         {/* <StatusBar style="light" /> */}
         <Stack.Navigator
-          // initialRouteName={splash} //Production
-          initialRouteName={"forgotpass"} //Dev
+          initialRouteName={"splash"} //Production
+          // initialRouteName={"orderHistoryList"} //Dev
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="First" component={FirstScreen} />
@@ -89,6 +108,12 @@ const MainNavigator = () => {
           <Stack.Screen name="Product" component={ProductScreen} />
           <Tab.Screen name="search" component={SearchScreen} />
           <Tab.Screen name="forgotpass" component={ForgotPass} />
+          <Tab.Screen name="checkout" component={CheckoutScreen} />
+          <Tab.Screen name="paymentSuccess" component={PaymentSuccessScreen} />
+          <Tab.Screen name="logout" component={LogoutScreen} />
+          <Tab.Screen name="privacy" component={Privacy} />
+          <Tab.Screen name="orderHistory" component={OrderHistory} />
+          <Tab.Screen name="orderHistoryList" component={OrderHistoryList} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

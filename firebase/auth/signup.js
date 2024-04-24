@@ -9,7 +9,7 @@ import { getFirestore, doc, setDoc } from "firebase/firestore";
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
 
-export default async function signUp(email, password, username, occu) {
+export default async function signUp(email, password, username) {
   let result = null,
     error = null;
   try {
@@ -21,11 +21,11 @@ export default async function signUp(email, password, username, occu) {
       const { uid } = result.user;
       console.log(uid);
 
-      setDoc(doc(db, "Users", uid), {
+      setDoc(doc(db, "users", uid), {
         email: email,
         name: username,
-        occu: occu,
-        canWrite: false,
+        cart: [],
+        address: "",
       });
     }
   } catch (e) {

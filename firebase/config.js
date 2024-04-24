@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-
+// import firebase from "@react-native-firebase/app";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDUSQte3A0XWlLbx15--wgismPTCR72cU8",
@@ -14,4 +14,5 @@ const firebaseConfig = {
 // Initialize Firebase
 
 const firebase_app = initializeApp(firebaseConfig);
+
 export default firebase_app;

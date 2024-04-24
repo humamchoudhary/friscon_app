@@ -6,9 +6,11 @@ import CustomText from "../components/CustomText";
 import CustomIconInput from "../components/CustomIconInput";
 import { Feather } from "@expo/vector-icons";
 import signUp from "../firebase/auth/signup";
+import { useAuthContext } from "../context/AuthContext";
 
 const SignupScreen = ({ navigation }) => {
   // Local variables
+  const { user } = useAuthContext();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [username, setUsername] = useState();
@@ -28,6 +30,7 @@ const SignupScreen = ({ navigation }) => {
         if (error) {
           setError(error.message);
         } else {
+          
           navigation.navigate("Login");
         }
       } else {

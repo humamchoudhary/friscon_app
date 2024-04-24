@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     alignSelf: "stretch",
     backgroundColor: "#FFF",
     zIndex: 3,
+    alignItems: "center",
     flexDirection: "row",
   },
   button: {
@@ -59,7 +60,7 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonHollowText: {
-    color: DARK_COLOR,
+    color: CTA_COLOR,
     fontFamily: "Medium",
     fontSize: 16,
     textAlign: "center",
@@ -98,13 +99,14 @@ export const styles = StyleSheet.create({
     textDecorationStyle: "solid",
   },
   shadow: {
-    shadowColor: "#000000",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 6,
+      height: 3,
     },
-    shadowOpacity: 0.21,
-    shadowRadius: 6.65,
-    elevation: 9,
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+
+    elevation: 6,
   },
 });

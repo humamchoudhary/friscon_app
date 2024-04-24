@@ -27,7 +27,6 @@ import * as SecureStore from "expo-secure-store";
  
       }else {
         navigation.navigate("First")
-      console.log("d")
     }
     }
     getUser();
